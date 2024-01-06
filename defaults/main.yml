@@ -1,0 +1,9 @@
+---
+users_append: true
+users_create_home: true
+users_shell: /bin/bash
+users_skeleton: /etc/skel
+users_state: present
+users_ssh_authorized_keys_state: present
+
+users: []

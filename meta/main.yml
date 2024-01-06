@@ -1,0 +1,20 @@
+galaxy_info:
+  role_name: users
+  author: obvionaoe
+  description: A simple minimal role to manage creation and initial configuration of users
+  license: license (MIT)
+  min_ansible_version: '2.4'
+  # platforms:
+  #   - name: Fedora
+  #     versions:
+  #     - all
+  #     - 25
+  #   - name: SomePlatform
+  #     versions:
+  #     - all
+  #     - 1.0
+  #     - 7
+  #     - 99.99
+  galaxy_tags: []
+
+dependencies: []

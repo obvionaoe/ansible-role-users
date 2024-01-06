@@ -1,0 +1,34 @@
+---
+- name: Configure users
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: user
+  block:
+    - name: "Create user: {{ user.name }}"
+      ansible.builtin.user:
+        append: "{{ user.append | default(users_append) }}"
+        create_home: "{{ user.create_home | default(users_create_home) }}"
+        groups: "{{ user.groups | default(omit) }}"
+        name: "{{ user.name | mandatory }}"
+        password: "{{ user.password | default(omit) }}"
+        shell: "{{ user.shell | default(users_shell) }}"
+        skeleton: "{{ user.skeleton | default(users_skeleton) }}"
+        state: "{{ user.state | default(users_state) }}"
+
+    - name: "Copy public key for user: {{ user.name }}"
+      ansible.posix.authorized_key:
+        user: "{{ user.name }}"
+        state: "{{ item.state | default(users_ssh_authorized_keys_state) }}"
+        key: "{{ lookup('ansible.builtin.file', item.file) | default(item) }}"
+      loop: "{{ user.ssh_authorized_keys }}"
+      when: user.ssh_authorized_keys is defined
+
+    - name: "Hush login messages for user: {{ user.name }}"
+      ansible.builtin.copy:
+        content: ""
+        dest: "/{{ user.name if user.name == 'root' else 'home/' + user.name }}/.hushlogin"
+        force: false
+        group: "{{ user.name }}"
+        owner: "{{ user.name }}"
+        mode: '0644'
+      when: user.hush_login
