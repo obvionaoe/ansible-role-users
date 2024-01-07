@@ -1,7 +1,7 @@
 galaxy_info:
   role_name: users
   author: obvionaoe
-  description: A simple minimal role to manage creation and initial configuration of users
+  description: A simple and minimal Ansible role to manage creation and initial configuration of users on Linux.
   license: license (MIT)
   min_ansible_version: '2.4'
   # platforms:
