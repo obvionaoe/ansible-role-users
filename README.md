@@ -26,19 +26,25 @@ These variables control the default values values for all users passed to the ro
 
 ```yaml
 users:
+  - name: old_user
+    state: absent
+    
   - append: true
     create_home: true
     groups: wheel
     hush_login: true
     name: user
     password: 57r0ngPa55
+    passwordless_sudo: true
     shell: /bin/bash
     skeleton: /etc/skel
     state: present
     ssh_authorized_keys:
       - ssh-key XXXXXXXXX
-      - file: path/to/key/file
+      - file: path/to/key/file1
         state: present
+      - file: path/to/key/file2
+        state: absent
 ```
 
 A list of users and their desired configuration. It is an empty list by default and only the `name` is mandatory for each user.

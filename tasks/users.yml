@@ -1,4 +1,4 @@
-- name: "Create user: {{ user.name }}"
+- name: "Create {{ user.name }}"
   ansible.builtin.user:
     append: "{{ user.append | default(users_append) }}"
     create_home: "{{ user.create_home | default(users_create_home) }}"
@@ -9,7 +9,7 @@
     skeleton: "{{ user.skeleton | default(users_skeleton) }}"
     state: "{{ user.state | default(users_state) }}"
 
-- name: "Copy public key for user: {{ user.name }}"
+- name: "Copy public key for {{ user.name }}"
   ansible.posix.authorized_key:
     user: "{{ user.name }}"
     state: "{{ item.state | default(users_ssh_authorized_keys_state) }}"
@@ -17,7 +17,19 @@
   loop: "{{ user.ssh_authorized_keys }}"
   when: user.ssh_authorized_keys is defined
 
-- name: "Hush login messages for user: {{ user.name }}"
+- name: "Setup sudo without password for {{ user.name }}"
+  ansible.builtin.copy:
+    content: "{{ user.name }} ALL=(ALL:ALL) NOPASSWD:ALL"
+    dest: "/etc/sudoers.d/{{ user.name }}_nopasswd"
+    owner: root
+    group: root
+    mode: "0440"
+    validate: 'visudo -cf %s'
+  when:
+    - user.passwordless_sudo
+    - user.name != "root"
+
+- name: "Hush login messages for {{ user.name }}"
   ansible.builtin.copy:
     content: ""
     dest: "/{{ user.name if user.name == 'root' else 'home/' + user.name }}/.hushlogin"
