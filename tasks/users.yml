@@ -24,8 +24,9 @@
     owner: root
     group: root
     mode: "0440"
-    validate: 'visudo -cf %s'
+    validate: "visudo -cf %s"
   when:
+    - user.passwordless_sudo is defined
     - user.passwordless_sudo
     - user.name != "root"
 
@@ -37,4 +38,6 @@
     group: "{{ user.name }}"
     owner: "{{ user.name }}"
     mode: '0644'
-  when: user.hush_login
+  when:
+    - user.hush_login is defined
+    - user.hush_login
